@@ -1,0 +1,7 @@
+{{extend 'layout.html'}}
+{{if 'project_id' in request.vars:}}
+    <h1>{{=T("New Task for project: %(title)s") % db.project[request.vars.project_id].as_dict()  }}</h1>
+{{else:}}
+    <h1>New Task</h1>
+{{pass}}
+{{=form}}
