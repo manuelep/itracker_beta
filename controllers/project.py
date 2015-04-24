@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+@auth.requires_login()
 def index():
     grid = SQLFORM.smartgrid(db.project,
         linked_tables = ['project'],

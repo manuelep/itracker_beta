@@ -16,7 +16,7 @@ def index():
     if you need a simple wiki simply replace the two lines below with:
     return auth.wiki()
     """
-    response.flash = T("Hello World")
+    response.flash = T("Hello! And welcome to my own issue tracker.")
     return dict()
 
 

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+@auth.requires_login()
 def index():
 
     def _get_prj_link(r):
@@ -98,5 +99,6 @@ def index():
     )
     return locals()
 
+@auth.requires_login()
 def new():
     return new_record('issuegrp')

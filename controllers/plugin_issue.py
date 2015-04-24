@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+@auth.requires_login()
 def index():
     db.issue.description.readable = 'view' in request.args or 'edit' in request.args
     if 'new' in request.args:
@@ -9,5 +10,6 @@ def index():
     )
     return locals()
 
+@auth.requires_login()
 def _customize():
     return customize()

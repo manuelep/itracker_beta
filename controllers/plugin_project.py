@@ -5,11 +5,13 @@ response.menu += [(T('Customize project'), False, None, [
         for tn in db.tables if tn.startswith('project_')
 ])]
 
+@auth.requires_login()
 def index():
     db.project.description.readable = 'view' in request.args or 'edit' in request.args
     grid = SQLFORM.smartgrid(db.project, csv = False)
     return locals()
 
+@auth.requires_login()
 def _customize():
 
     def customize():
