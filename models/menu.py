@@ -28,7 +28,7 @@ response.menu = [
     (T('Home'), False, URL('default', 'index'), [])
 ]
 
-DEVELOPMENT_MENU = True
+DEVELOPMENT_MENU = bool(myconf.take('app.development', cast=int))
 
 #########################################################################
 ## provide shortcuts for development. remove in production

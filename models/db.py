@@ -94,6 +94,7 @@ auth.settings.reset_password_requires_verification = True
 left_sidebar_enabled = True
 
 mymenu = MENU([
+    [T('Users'), False, URL('default', 'users')],
     [T('Projects'), False, URL('project', 'index')],
     [T('Tasks'), False, URL('issuegrp', 'index')],
     [T('Issues'), False, URL('issue', 'index')],

@@ -37,7 +37,15 @@ def user():
     """
     return dict(form=auth())
 
+@auth.requires_login()
+def users():
 
+    db.auth_user.registration_key.writable = True
+    grid = SQLFORM.grid(db.auth_user,
+        csv = False,
+    )
+
+    return locals()
 @cache.action()
 def download():
     """
