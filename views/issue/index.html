@@ -1,3 +1,7 @@
 {{extend 'layout.html'}}
 <h1>{{=T("My issues")}}</h1>
 {{=grid}}
+{{if grid.rows is None and 'view' in request.args:}}
+	<h2>{{=T("Comments")}}</h2>
+	{{=IssueGrid.threads(int(request.args[-1]))}}
+{{pass}}

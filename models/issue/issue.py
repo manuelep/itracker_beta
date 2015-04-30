@@ -126,3 +126,68 @@ class IssueGrid(object):
             ),
             _class = "btn-group"
         )
+
+    @staticmethod
+    def add_new_comment(r, label="Add comment"):
+        redirect_url = URL(args=request.args, vars=request.vars, user_signature=True)
+        return A(
+            T(label),
+            _href=URL('issue', 'new_comment', args=(r.id,), vars=dict(redirect_url=redirect_url)),
+            _class = "btn btn-default"
+        )
+
+    @classmethod
+    def threads(cls, issue_id):
+        """
+        db.item.total_price = Field.Virtual(
+    'total_price',
+    lambda row: row.item.unit_price*row.item.quantity)
+        """
+
+#         def _btn(c):
+#             return A(
+#                 T("Replay"),
+#                 _href = URL('issue', 'new_comment',
+#                     args=(issue_id, c.id,),
+#                     vars=dict(redirect_url=URL())
+#                 ),
+#                 _class = "btn btn-default btn-xs"
+#             )
+
+        all_comments = db(db.thread.issue_id==issue_id).select(orderby=db.thread.reply_to|~db.thread.created_on)
+        def _walker(comment_id):
+            for comment in all_comments.find(lambda row: row.reply_to==comment_id):
+                yield comment
+                for reply in _walker(comment.id):
+                    yield reply
+
+        rows = []
+        
+        for comment in all_comments.find(lambda row: row.reply_to==None):
+            main = DIV(
+                DIV(
+                    T("Comment id: "), comment.id,
+                    _class="col-md-1"
+                ),
+                DIV(comment.reply, _class="col-md-9 alert alert-info"),
+                DIV(cls.add_new_comment(comment, "Reply"), _class="col-md-2"),
+                _class="row"
+            )
+            subs = [DIV(
+                DIV(
+                    T("Comment id: "), reply.id,
+                    _class="col-md-1"
+                ),
+                DIV(
+                    T("In reply to: "),
+                    reply.reply_to,
+                    _class="col-md-1"
+                ),
+                DIV(reply.reply, _class="col-md-8 alert alert-warning"),
+                DIV(cls.add_new_comment(reply, "Reply"), _class="col-md-2"),
+                _class = "row"
+            ) for reply in _walker(comment.id)]
+            rows += [main]
+            rows += subs
+
+        return DIV(DIV(*rows, _class="container-fluid"))

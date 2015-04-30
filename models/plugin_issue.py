@@ -134,13 +134,19 @@ db.issue.assigned_to.represent = AuthGroupSet.represent
 
 db.define_table('thread',
     Field('issue_id', 'reference issue'),
-    Field('replay_to', 'reference thread'),
-    Field('replay'),
+    Field('reply_to', 'reference thread'),
+    Field('reply', 'text', length=255,
+        comment=XML(T("MARKMIN text syntax is accepted. Max length is 255.")\
+            .replace('MARKMIN', str(STRONG(A('MARKMIN', _href="http://web2py.com/books/default/chapter/29/05#markmin_markmin_syntax"))))\
+            .replace('255', str(STRONG('255')))
+        ),
+        represent=lambda v, r: MARKMIN(v)
+    ),
     auth.signature,
-    format = '%(replay)s'
+    format = '%(reply)s'
 )
 
-db.thread.replay_to.requires = IS_EMPTY_OR(IS_IN_DB(db, 'thread.id', '%(replay)s'))
+db.thread.reply_to.requires = IS_EMPTY_OR(IS_IN_DB(db, 'thread.id', '%(reply)s'))
 
 ####################
 # Callbacks
