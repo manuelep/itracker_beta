@@ -57,7 +57,7 @@ class IssueWeight(object):
         return pw*sw
     @classmethod
     def run(cls, r):
-        return cls._get_weight(r.priority, r.typology)
+        return cls._get_weight(r.priority, r.severity)
         
 
 db.define_table('issue',
