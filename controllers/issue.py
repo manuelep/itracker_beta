@@ -2,16 +2,34 @@
 
 @auth.requires_login()
 def index():
-    query = (db.issue.id==db.link_issue_project.issue_id) & \
-        (db.link_issue_project.project_id==db.project.id)
+    if request.vars.issuegrp_id:
+        sq = db(
+            (db.issue.id==db.link_issue_issuegrp.issue_id) & \
+            (db.link_issue_issuegrp.issuegrp_id==request.vars.issuegrp_id)
+        )._select(db.link_issue_issuegrp.issue_id)
+        query = db.issue.id.belongs(sq)
+    elif request.vars.project_id:
+        sq1 = db(
+            (db.link_issue_issuegrp.issuegrp_id==db.link_issuegrp_project.issuegrp_id) & \
+            (db.link_issuegrp_project.project_id==request.vars.project_id)
+        )._select(db.link_issue_issuegrp.issue_id)
+        
+        sq2 = db(
+            (db.issue.id==db.link_issue_project.issue_id) & \
+            (db.link_issue_project.project_id==request.vars.project_id)
+        )._select(db.link_issue_project.issue_id)
+
+        query = db.issue.id.belongs(sq1)|db.issue.id.belongs(sq2)
+    else:
+        query = db.issue.id>0
 
     db.project.title.label = T("Project")
+    db.project.title.represent = lambda v,r: v or ''
     
-    fields = [db.issue.id, db.issue.title, db.project.title,
+    fields = [db.issue.id, db.issue.title,
         db.issue.typology, db.issue.priority,
         db.issue.severity, db.issue.weigth, db.issue.status,
         db.issue.dead_line, db.issue.assigned_to, db.issue.closed,
-        db.thread.issue_id, db.thread.reply, db.thread.reply_to
     ]
 
     grid = SQLFORM.grid(query,
@@ -25,6 +43,7 @@ def index():
             dict(header='Comments', body=IssueGrid.add_new_comment),
         ],
         links_in_grid = False,
+        oncreate = IssueGrid.oncreate,
         csv = False,
         formname = 'issue'
     )

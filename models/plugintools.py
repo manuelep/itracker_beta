@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-link_repr = lambda v, *a: db.project._format % v
+link_repr = lambda v, *a: v if v is None else db.project._format % v
 
 db.define_table('link_issue_project',
     Field('issue_id', 'reference issue', required=True, represent=link_repr),

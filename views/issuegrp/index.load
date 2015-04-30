@@ -1,0 +1,35 @@
+{{if grid.rows is None and 'view' in request.args:}}
+	<div role="tabpanel">
+
+		<!-- Nav tabs -->
+		<ul class="nav nav-tabs" role="tablist">
+	      	<li role="presentation" class="active">
+			    <a href="#tsk_details" aria-controls="tsk_details" role="tab" data-toggle="tab">
+				    <span class="glyphicon glyphicon-grain" aria-hidden="true"></span>
+	                {{=T("Task details")}}
+				</a>
+	        </li>
+			<li role="presentation">
+				<a href="#tsk_issues" aria-controls="tsk_issues" role="tab" data-toggle="tab">
+				<span class="glyphicon glyphicon-apple" aria-hidden="true"></span> 
+					{{=T("Task issues")}}
+				</a>
+			</li>
+		</ul>
+	
+		<!-- Tab panes -->
+		<div class="tab-content">
+			<div role="tabpanel" class="tab-pane active" id="tsk_details">
+		    	<br />
+		    	<div class="jumbotron">{{=grid}}</div>
+	    	</div>
+		    <div role="tabpanel" class="tab-pane" id="tsk_issues">
+		    	<br />
+		    	{{=LOAD('issue', 'index.load', ajax=True, vars=dict(issuegrp_id=request.args[-1]))}}
+	    	</div>
+		</div>
+
+	</div>
+{{else:}}
+	{{=grid}}
+{{pass}}

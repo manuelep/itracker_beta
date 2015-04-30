@@ -93,9 +93,16 @@ auth.settings.reset_password_requires_verification = True
 
 left_sidebar_enabled = True
 
+def ICON(icon):
+    """ <span class="glyphicon glyphicon-search" aria-hidden="true"></span> """
+    return SPAN(
+        _class = "glyphicon glyphicon-" + icon,
+        **{"_aria-hidden": "true"}
+    )
+
 mymenu = MENU([
-    [T('Users'), False, URL('default', 'users')],
-    [T('Projects'), False, URL('project', 'index')],
-    [T('Tasks'), False, URL('issuegrp', 'index')],
-    [T('Issues'), False, URL('issue', 'index')],
+    [DIV(ICON('user'), " ", T('Users')), False, URL('default', 'users')],
+    [DIV(ICON('tree-deciduous'), ' ', T('Projects')), False, URL('project', 'index')],
+    [DIV(ICON('grain'), ' ', T('Tasks')), False, URL('issuegrp', 'index')],
+    [DIV(ICON('apple'), ' ', T('Issues')), False, URL('issue', 'index')],
 ])

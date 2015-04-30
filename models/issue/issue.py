@@ -191,3 +191,10 @@ class IssueGrid(object):
             rows += subs
 
         return DIV(DIV(*rows, _class="container-fluid"))
+
+    @staticmethod
+    def oncreate(form):
+        if request.vars.issuegrp_id:
+            db.link_issue_issuegrp[0] = dict(issue_id=form.vars.id, issuegrp_id=request.vars.issuegrp_id)
+        elif request.vars.project_id:
+            db.link_issue_project[0] = dict(issue_id=form.vars.id, project_id=request.vars.project_id)
