@@ -24,6 +24,7 @@
 'About': 'About',
 'Access Control': 'Controllo Accessi',
 'Add': 'Aggiungi',
+'Add a new comment': 'Add a new comment',
 'Add comment': 'Add comment',
 'Add new comment': 'Add new comment',
 'Add Record': 'Add Record',
