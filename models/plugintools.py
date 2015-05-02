@@ -31,3 +31,26 @@ def new_record(tablename):
 
             tabs[0].bulk_insert(recs)
     return dict(form=form)
+
+class Component(object):
+
+    @staticmethod
+    def btn(*a, **kw):
+        """
+        <a class="button btn btn-default" data-w2p_disable_with="default"
+            data-w2p_method="GET" data-w2p_target="prj_issues_component"
+            href="/BlUG/issue/index.load/view/issue/8?project_id=1&amp;
+            signature=155efcf95ba8545807a20a28c925873d75b0a643">
+
+            <span class="icon magnifier icon-zoom-in glyphicon glyphicon-zoom-in"></span>
+            <span class="buttontext button" title="Vista">Vista</span>
+        </a>
+        """
+        attributes = dict({
+            '_data-w2p_disable_with': "default",
+            '_data-w2p_method': "POST",
+        }, **kw)
+        return A(*a, **attributes)
+
+
+

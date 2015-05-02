@@ -28,6 +28,24 @@ response.menu = [
     (T('Home'), False, URL('default', 'index'), [])
 ]
 
+response.menu += [
+    (SPAN(ICON('cog'), " ", T("Access")), False, '#', [
+        (DIV(ICON('user'), " ", T('Users')), False, URL('default', 'users'),),
+    ]),
+    (SPAN(ICON('dashboard'), " ", STRONG(TAG.u("iTracker"))), False, '#', [
+        [DIV(ICON('tree-deciduous'), ' ', T('Projects')), False, URL('project', 'index')],
+        [DIV(ICON('grain'), ' ', T('Tasks')), False, URL('issuegrp', 'index')],
+        [DIV(ICON('apple'), ' ', T('Issues')), False, URL('issue', 'index')],
+    ]),
+]
+
+# mymenu = MENU([
+#     [DIV(ICON('user'), " ", T('Users')), False, URL('default', 'users')],
+#     [DIV(ICON('tree-deciduous'), ' ', T('Projects')), False, URL('project', 'index')],
+#     [DIV(ICON('grain'), ' ', T('Tasks')), False, URL('issuegrp', 'index')],
+#     [DIV(ICON('apple'), ' ', T('Issues')), False, URL('issue', 'index')],
+# ])
+
 DEVELOPMENT_MENU = bool(myconf.take('app.development', cast=int))
 
 #########################################################################

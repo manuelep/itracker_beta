@@ -27,7 +27,8 @@ db.define_table('project',
     Field('project_version'),
     Field('status', 'reference project_state', label=T('State')),
     Field('project_id', 'reference project', label=T("Parent project")),
-    format = '%(title)s'
+    format = '%(title)s',
+    singular=T("project"), plural=T("projects")
 )
 
 IssueReferences(db.project).assign()

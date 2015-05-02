@@ -15,6 +15,11 @@
 					{{=T("Task issues")}}
 				</a>
 			</li>
+			<li role="presentation" class="disabled">
+	  			<a href="#">
+	  				{{=ICON('info-sign')}} {{=T("Selected task:")}} <span class="label label-info">{{=db.issuegrp[int(request.args[-1])].title}}</span>
+  				</a>
+			</li>
 		</ul>
 	
 		<!-- Tab panes -->

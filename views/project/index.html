@@ -11,15 +11,15 @@
 		  <!-- Nav tabs -->
 		  <ul class="nav nav-tabs" role="tablist">
 			    <li role="presentation" class="active">
-							<a href="#prj_details" aria-controls="prj_details" role="tab" data-toggle="tab">
-									<span class="glyphicon glyphicon-tree-deciduous" aria-hidden="true"></span>
-									{{=T("Project details")}}
-							</a>
-					</li>
+					<a href="#prj_details" aria-controls="prj_details" role="tab" data-toggle="tab">
+						<span class="glyphicon glyphicon-tree-deciduous" aria-hidden="true"></span>
+						{{=T("Project details")}}
+					</a>
+				</li>
 			    <li role="presentation">
 					<a href="#prj_tasks" aria-controls="prj_tasks" role="tab" data-toggle="tab" onclick="reload_prj_tasks()">
 						<span class="glyphicon glyphicon-grain" aria-hidden="true"></span>
-							{{=T("Project tasks")}}
+						{{=T("Project tasks")}}
 					</a>
 				</li>
 			    <li role="presentation">
@@ -28,6 +28,11 @@
 							{{=T("Project issues")}}
 					</a>
 				</li>
+				<li role="presentation" class="disabled">
+		  			<a href="#">
+		  				{{=ICON('info-sign')}} {{=T("Selected project:")}} <span class="label label-info">{{=db.project[int(request.args[-1])].title}}</span>
+	  				</a>
+  				</li>
 		  </ul>
 
 		  <!-- Tab panes -->
@@ -37,7 +42,7 @@
 				    	<div class="jumbotron">{{=grid}}</div>
 		    	</div>
 		    	<div role="tabpanel" class="tab-pane" id="prj_tasks">
-				    	<br />
+		    			<br />
 				    	{{=LOAD('issuegrp', 'index.load', ajax=True,
 				    	    vars=dict(project_id=request.args[-1]),
 				    	    target="prj_tasks_component"

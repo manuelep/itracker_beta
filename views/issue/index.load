@@ -1,5 +1,5 @@
 {{=grid}}
 {{if grid.rows is None and 'view' in request.args:}}
 	<h2>{{=T("Comments")}}</h2>
-	{{=IssueGrid.threads(int(request.args[-1]))}}
+	{{=LOAD('issue', '_comments.load', ajax=True, args=(request.args[-1],), target="comments")}}
 {{pass}}

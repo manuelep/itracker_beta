@@ -91,7 +91,7 @@ auth.settings.reset_password_requires_verification = True
 ## after defining tables, uncomment below to enable auditing
 # auth.enable_record_versioning(db)
 
-left_sidebar_enabled = True
+left_sidebar_enabled = False
 
 def ICON(icon):
     """ <span class="glyphicon glyphicon-search" aria-hidden="true"></span> """
@@ -99,10 +99,3 @@ def ICON(icon):
         _class = "glyphicon glyphicon-" + icon,
         **{"_aria-hidden": "true"}
     )
-
-mymenu = MENU([
-    [DIV(ICON('user'), " ", T('Users')), False, URL('default', 'users')],
-    [DIV(ICON('tree-deciduous'), ' ', T('Projects')), False, URL('project', 'index')],
-    [DIV(ICON('grain'), ' ', T('Tasks')), False, URL('issuegrp', 'index')],
-    [DIV(ICON('apple'), ' ', T('Issues')), False, URL('issue', 'index')],
-])

@@ -24,6 +24,7 @@ class IssueGrid(object):
         res = res.sort(lambda r: r.title)
 
         url = lambda rid: URL('project', 'index',
+            extension = 'html',
             args = ('project', 'view', 'project', rid,),
             user_signature=True
         )
@@ -50,7 +51,7 @@ class IssueGrid(object):
             (db.issuegrp.id==db.link_issue_issuegrp.issuegrp_id) & \
             (db.link_issue_issuegrp.issue_id==r.id)
         ).select(db.issuegrp.ALL)
-        url = lambda rid: URL('issuegrp', 'index',
+        url = lambda rid: URL('issuegrp', 'index', extension="html",
             args = ('issuegrp', 'view', 'issuegrp', rid,),
             user_signature=True
         )
@@ -128,7 +129,7 @@ class IssueGrid(object):
         )
 
     @staticmethod
-    def add_new_comment(r, label="Add comment"):
+    def add_new_comment_old(r, label="Add comment"):
         redirect_url = URL(args=request.args, vars=request.vars, user_signature=True)
         return A(
             T(label),
@@ -136,12 +137,54 @@ class IssueGrid(object):
             _class = "btn btn-default"
         )
 
+    @staticmethod
+    def add_new_comment(*args):
+        """
+        <!-- Small modal -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-sm">Small modal</button>
+        
+        <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              ...
+            </div>
+          </div>
+        </div>
+        """
+        label = T("Replay") if len(args)>1 else T("Add new comment")
+        modal_id = 'modal-' + '-'.join([str(i) for i in args])
+        load_url = URL('issue', 'new_comment.load', args=args)
+        button = BUTTON(ICON("comment"), " ", label, _type="button",
+            _onclick = "jQuery('#%(modal_id)s').html('loading...');jQuery.web2py.component('%(load_url)s', '%(modal_id)s');jQuery('.modal').on('hidden.bs.modal', function (e) {jQuery('#comments').get(0).reload();});" % locals(),
+            _class="button btn btn-default btn-sm",
+            **{
+                '_data-toggle': 'modal',
+                '_data-target': '.' + modal_id
+            }
+        )
+        div = DIV(
+            DIV(
+                DIV(
+                    # <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    #BUTTON("x", _type="button", _class="close", **{'_data-dismiss': 'modal', '_aria-label': 'Close'}),
+                    DIV(_id=modal_id),
+                    _class = "modal-content"
+                ),
+                _class = "modal-dialog modal-lg"
+            ),
+            _id = "MyModal",
+            _class = "modal fade " + modal_id,
+            _tabindex="-1", _role="dialog",
+            **{
+                '_aria-labelledby': 'Comment on ' + modal_id,
+                '_aria-hidden': "true"
+            }
+        )
+        return SPAN(button, div)
+
     @classmethod
     def threads(cls, issue_id):
         """
-        db.item.total_price = Field.Virtual(
-    'total_price',
-    lambda row: row.item.unit_price*row.item.quantity)
         """
 
 #         def _btn(c):
@@ -170,7 +213,7 @@ class IssueGrid(object):
                     _class="col-md-1"
                 ),
                 DIV(comment.reply, _class="col-md-9 alert alert-info"),
-                DIV(cls.add_new_comment(comment, "Reply"), _class="col-md-2"),
+                DIV(cls.add_new_comment(issue_id, comment.id), _class="col-md-2"),
                 _class="row"
             )
             subs = [DIV(
@@ -184,7 +227,7 @@ class IssueGrid(object):
                     _class="col-md-1"
                 ),
                 DIV(reply.reply, _class="col-md-8 alert alert-warning"),
-                DIV(cls.add_new_comment(reply, "Reply"), _class="col-md-2"),
+                DIV(cls.add_new_comment(issue_id, reply.id), _class="col-md-2"),
                 _class = "row"
             ) for reply in _walker(comment.id)]
             rows += [main]

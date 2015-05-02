@@ -8,7 +8,7 @@ class IssuegrpGrid(object):
             (db.project.id==db.link_issuegrp_project.project_id) & \
             (db.link_issuegrp_project.issuegrp_id==r.id)
         ).select(db.project.ALL, distinct=True)
-        url = lambda rid: URL('project', 'index',
+        url = lambda rid: URL('project', 'index', extension="html",
             args = ('project', 'view', 'project', rid,),
             user_signature=True
         )

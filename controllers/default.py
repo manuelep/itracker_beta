@@ -41,7 +41,8 @@ def user():
 def users():
 
     db.auth_user.registration_key.writable = True
-    grid = SQLFORM.grid(db.auth_user,
+    grid = SQLFORM.smartgrid(db.auth_user,
+        linked_tables = [db.auth_membership],
         csv = False,
     )
 

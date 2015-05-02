@@ -40,7 +40,7 @@ def index():
             dict(header='Projects', body=IssueGrid.prj_link),
             dict(header='Tasks', body=IssueGrid.tsk_link),
             dict(header='Wikis', body=IssueGrid.doc_link),
-            dict(header='Comments', body=IssueGrid.add_new_comment),
+            dict(header='Comments', body=lambda r: IssueGrid.add_new_comment(r.id)),
         ],
         links_in_grid = False,
         oncreate = IssueGrid.oncreate,
@@ -53,6 +53,10 @@ def index():
 def new():
     return new_record('issue')
 
+def foo(e):
+    """ data-dismiss="modal" """
+    e.attributes['_onclick'] = "$('.modal').modal('hide');"
+    return e
 
 @auth.requires_login()
 def new_comment():
@@ -70,7 +74,12 @@ def new_comment():
     form.vars.issue_id = request.vars.issue_id
     form.vars.reply_to = request.vars.reply_to
     if form.process().accepted:
-        if not request.vars.redirect_url is None:
-            redirect(request.vars.redirect_url)
+        pass
+
+    form.elements('input[type=submit]', replace=foo  )
     
     return dict(form=form)
+
+@auth.requires_login()
+def _comments():
+    return IssueGrid.threads(request.args(0, cast=int))
