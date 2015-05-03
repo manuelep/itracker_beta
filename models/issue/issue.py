@@ -212,7 +212,7 @@ class IssueGrid(object):
                     T("Comment id: "), comment.id,
                     _class="col-md-1"
                 ),
-                DIV(comment.reply, _class="col-md-9 alert alert-info"),
+                DIV(MARKMIN(comment.reply), _class="col-md-9 alert alert-info"),
                 DIV(cls.add_new_comment(issue_id, comment.id), _class="col-md-2"),
                 _class="row"
             )
@@ -226,7 +226,7 @@ class IssueGrid(object):
                     reply.reply_to,
                     _class="col-md-1"
                 ),
-                DIV(reply.reply, _class="col-md-8 alert alert-warning"),
+                DIV(MARKMIN(reply.reply), _class="col-md-8 alert alert-warning"),
                 DIV(cls.add_new_comment(issue_id, reply.id), _class="col-md-2"),
                 _class = "row"
             ) for reply in _walker(comment.id)]
