@@ -11,7 +11,7 @@ def index():
         query = db.issue.id>0
 
     if 'active_only' in request.args:
-        query = db.issue.closed!=True
+        query &= db.issue.closed!=True
 
     if request.vars.issuegrp_id:
         sq = db(
