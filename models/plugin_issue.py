@@ -231,7 +231,8 @@ Populator.bulk(
 Populator.bulk(
     db.issue_state,
     [
-        dict(label='New', sort_order=1, is_default=True),
+        dict(label='New', sort_order=0, is_default=True),
+        dict(label='Work in progress', sort_order=1, is_default=False),
         dict(label='Fixed', sort_order=2, is_default=False),
         dict(label='Rejected', sort_order=3, is_default=False),
         dict(label='Invalid', sort_order=4, is_default=False),

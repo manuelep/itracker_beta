@@ -35,19 +35,27 @@ def index():
     db.project.title.label = T("Project")
     db.project.title.represent = lambda v,r: v or ''
     
-    fields = [db.issue.id, db.issue.title,
-        db.issue.typology, db.issue.priority,
-        db.issue.severity, db.issue.weigth, db.issue.status,
+    db.issue.priority.readable = False
+    db.issue_priority.sort_order.label = db.issue.priority.label
+    db.issue_priority.sort_order.represent = lambda v,r: db.issue_priority._format(db.issue_priority[r.issue.priority])
+    
+    db.issue.severity.readable = False
+    db.issue_severity.sort_order.label = db.issue.severity.label
+    db.issue_severity.sort_order.represent = lambda v,r: db.issue_severity._format(db.issue_severity[r.issue.severity])
+    
+    fields = [db.issue.id, db.issue.title, db.issue.typology,
+        db.issue.priority, db.issue_priority.sort_order,
+        db.issue.severity, db.issue_severity.sort_order,
+        db.issue.weigth, db.issue.status,
         db.issue.dead_line, db.issue.assignedto,
         db.issue.modified_on, db.issue.closed,
     ]
     db.issue.modified_on.readable = True
-    
 
-    grid = SQLFORM.grid(query,
+    grid = SQLFORM.grid(query & (db.issue.priority==db.issue_priority.id) & (db.issue.severity==db.issue_severity.id),
         field_id = db.issue.id,
         fields = fields,
-        orderby = db.issue.weigth|db.issue.modified_on,
+        orderby = db.issue.closed|db.issue.status|db.issue.weigth|db.issue.modified_on,
         args = request.args,
         links = [
             dict(header='Projects', body=IssueGrid.prj_link),
