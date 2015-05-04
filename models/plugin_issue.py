@@ -7,6 +7,7 @@ if not 'plugin_shared_tools' in globals():
 Populator, IssueReferences, UniqueDefault = plugin_shared_tools.Populator, plugin_shared_tools.IssueReferences, plugin_shared_tools.UniqueDefault
 
 from datetime import datetime
+from gluon.tools import prettydate
 
 ####################
 # Model
@@ -72,16 +73,20 @@ db.define_table('issue',
     Field('weigth', 'integer', compute=IssueWeight.run),
     Field('status', 'reference issue_state', label=T('State')),
     Field('tags', 'list:string'),
-    Field('assigned_to', 'list:reference auth_group', ),
-    Field('dead_line', 'date'),
+    Field('assigned_to', 'list:reference auth_group', comment="DEPRECATED"), # DEPRECATED
+    Field('assignedto', 'reference auth_group', label=T("Assigned to")),
+    Field('dead_line', 'date', represent=lambda v,r: prettydate(v)),
     Field('closed', 'boolean', default=False),
     Field('closed_on', 'datetime', writable=False),
     Field('slugs', 'list:string', label=T("Wiki pages"),
         readable = False,
         represent=lambda v,r: SPAN(*map(lambda e: A(e, _href=URL('wiki', 'index', args=('issue_%s' % r.id +'_'+e,))), v))),
     auth.signature,
-    format = '%(title)s'
+    format = '%(title)s',
 )
+
+db.issue.modified_on.represent=lambda v,r: prettydate(v)
+db.issue.modified_on.label = T("Last modified")
 
 IssueReferences(db.issue).assign()
 
@@ -122,12 +127,22 @@ class AuthGroupSet(object):
     def represent(cls, value, row):
         return ', '.join((cls._get_label(id) for id in value))
 
+    @classmethod
+    def represent1(cls, value, row):
+        return cls._get_label(value)
+
 
 db.issue.assigned_to.requires = IS_IN_SET(
     theset = AuthGroupSet.get(),
     multiple = True
 )
+db.issue.assignedto.requires = IS_IN_SET(
+    theset = AuthGroupSet.get(),
+    multiple = False
+)
+
 db.issue.assigned_to.represent = AuthGroupSet.represent
+db.issue.assignedto.represent = AuthGroupSet.represent1
 
 # Thread
 # ======

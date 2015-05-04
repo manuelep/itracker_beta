@@ -29,6 +29,7 @@ def index():
     )
     return dict(grid=grid)
 
-@auth.requires_login()
-def new():
-    return new_record('issuegrp')
+# @auth.requires_login()
+# def new():
+#     """ DEPRECATED """
+#     return new_record('issuegrp')

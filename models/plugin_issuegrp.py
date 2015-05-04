@@ -18,7 +18,7 @@ db.define_table('issuegrp',
         comment=XML(T("MARKMIN text syntax is accepted.").replace('MARKMIN', str(STRONG(A('MARKMIN', _href="http://web2py.com/books/default/chapter/29/05#markmin_markmin_syntax"))))),
         represent=lambda v, r: MARKMIN(v)
     ),
-    Field('typology', 'reference issuegrp_type', label=T('Type')),
+    Field('typology', 'reference issuegrp_type', label=T('Type'), represent=lambda v,r: db.issuegrp_type[v].label),
     Field('slugs', 'list:string', label=T("Wiki pages"), readable=False,
         represent = lambda v,r: SPAN(*map(lambda e: A(e, _href=URL('wiki', 'index', args=('issue_%s' % r.id +'_'+e,))), v))),
     auth.signature,

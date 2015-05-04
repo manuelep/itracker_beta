@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from gluon import *
+from gluon.sqlhtml import TextWidget
 
 class Populator(object):
 
@@ -60,3 +61,24 @@ class UniqueDefault(object):
         # is_default is set to True
         if f['is_default']==True:
             db(self.tab.is_default==True).update_naive(is_default=False)
+
+
+class CheckTextLength(TextWidget):
+
+    @classmethod
+    def widget(cls, field, value, **attributes):
+#         attributes['_data-compare-with'] = self.compare
+        input = TextWidget.widget(field, value,  _oninput="lengthcheck(this)", **attributes)
+        script = SCRIPT("""function lengthcheck (content) {
+            if (content.value.length > %(limit)s) {
+                content.setCustomValidity('Too many characters!');
+                jQuery(content).val(content.value.substr(0, %(limit)s));
+            } else {
+                content.setCustomValidity('');
+            };
+        };
+        """ % dict(limit=field.length))
+        return SPAN(input, script)
+
+#     def __call__(self, *a, **kw):
+#         return self.widget(*a, **kw)

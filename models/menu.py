@@ -34,6 +34,7 @@ response.menu += [
         (DIV(ICON('asterisk'), " ", T('Teams')), False, URL('default', 'access', args=('group',)),),
     ]),
     (SPAN(ICON('dashboard'), " ", STRONG(TAG.u("iTracker"))), False, '#', [
+        [DIV(ICON('dashboard'), ' ', T('My issues')), False, URL('issue', 'index', args=('assigned_to_user',))],
         [DIV(ICON('tree-deciduous'), ' ', T('Projects')), False, URL('project', 'index')],
         [DIV(ICON('grain'), ' ', T('Tasks')), False, URL('issuegrp', 'index')],
         [DIV(ICON('apple'), ' ', T('Issues')), False, URL('issue', 'index')],

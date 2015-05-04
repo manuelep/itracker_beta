@@ -133,7 +133,7 @@ class IssueGrid(object):
         redirect_url = URL(args=request.args, vars=request.vars, user_signature=True)
         return A(
             T(label),
-            _href=URL('issue', 'new_comment', args=(r.id,), vars=dict(redirect_url=redirect_url)),
+            _href=URL('issue', '_new_comment', args=(r.id,), vars=dict(redirect_url=redirect_url)),
             _class = "btn btn-default"
         )
 
@@ -153,7 +153,7 @@ class IssueGrid(object):
         """
         label = T("Replay") if len(args)>1 else T("Add new comment")
         modal_id = 'modal-' + '-'.join([str(i) for i in args])
-        load_url = URL('issue', 'new_comment.load', args=args)
+        load_url = URL('issue', '_new_comment.load', args=args)
         button = BUTTON(ICON("comment"), " ", label, _type="button",
             _onclick = "jQuery('#%(modal_id)s').html('loading...');jQuery.web2py.component('%(load_url)s', '%(modal_id)s');jQuery('.modal').on('hidden.bs.modal', function (e) {jQuery('#comments').get(0).reload();});" % locals(),
             _class="button btn btn-default btn-sm",

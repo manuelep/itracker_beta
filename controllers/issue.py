@@ -1,13 +1,24 @@
 # -*- coding: utf-8 -*-
 
+from plugin_shared_tools import CheckTextLength
+
 @auth.requires_login()
 def index():
+
+    if 'assigned_to_user' in request.args:
+        query = db.issue.assignedto.belongs(auth.user_groups)
+    else:
+        query = db.issue.id>0
+
+    if 'active_only' in request.args:
+        query = db.issue.closed!=True
+
     if request.vars.issuegrp_id:
         sq = db(
             (db.issue.id==db.link_issue_issuegrp.issue_id) & \
             (db.link_issue_issuegrp.issuegrp_id==request.vars.issuegrp_id)
         )._select(db.link_issue_issuegrp.issue_id)
-        query = db.issue.id.belongs(sq)
+        query &= db.issue.id.belongs(sq)
     elif request.vars.project_id:
         sq1 = db(
             (db.link_issue_issuegrp.issuegrp_id==db.link_issuegrp_project.issuegrp_id) & \
@@ -19,9 +30,7 @@ def index():
             (db.link_issue_project.project_id==request.vars.project_id)
         )._select(db.link_issue_project.issue_id)
 
-        query = db.issue.id.belongs(sq1)|db.issue.id.belongs(sq2)
-    else:
-        query = db.issue.id>0
+        query &= db.issue.id.belongs(sq1)|db.issue.id.belongs(sq2)
 
     db.project.title.label = T("Project")
     db.project.title.represent = lambda v,r: v or ''
@@ -29,8 +38,11 @@ def index():
     fields = [db.issue.id, db.issue.title,
         db.issue.typology, db.issue.priority,
         db.issue.severity, db.issue.weigth, db.issue.status,
-        db.issue.dead_line, db.issue.assigned_to, db.issue.closed,
+        db.issue.dead_line, db.issue.assignedto,
+        db.issue.modified_on, db.issue.closed,
     ]
+    db.issue.modified_on.readable = True
+    
 
     grid = SQLFORM.grid(query,
         field_id = db.issue.id,
@@ -50,12 +62,12 @@ def index():
     )
     return locals()
 
-@auth.requires_login()
-def new():
-    """ DEPRECATED """
-    return new_record('issue')
+# @auth.requires_login()
+# def new():
+#     """ DEPRECATED """
+#     return new_record('issue')
 
-def foo(e):
+def onclick_hideModal(e):
     """ data-dismiss="modal"
     WARNING: problema noto: questo chiude il form aperto in modal prima della validazione
     se qualcosa non passa la validazione si viene avvertiti via flash ma oramai il form è chiuso
@@ -64,7 +76,7 @@ def foo(e):
     return e
 
 @auth.requires_login()
-def new_comment():
+def _new_comment():
     issue_id = request.args(0, cast=int)
     reply_to = request.args(1, cast=int, default=None)
     
@@ -75,13 +87,14 @@ def new_comment():
 
     db.thread.reply_to.writable = False
     db.thread.reply_to.readable = False
+    db.thread.reply.widget = CheckTextLength.widget
     form = SQLFORM(db.thread, hidden=dict(issue_id=issue_id, reply_to=reply_to))
     form.vars.issue_id = request.vars.issue_id
     form.vars.reply_to = request.vars.reply_to
     if form.process().accepted:
         pass
 
-    form.elements('input[type=submit]', replace=foo  )
+    form.elements('input[type=submit]', replace=onclick_hideModal)
     
     return dict(form=form)
 
