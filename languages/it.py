@@ -320,6 +320,7 @@
 'Stylesheet': 'Foglio di stile (stylesheet)',
 'Sub project': 'Sub project',
 'Sub projects': 'Sub projects',
+'sub-projects': 'sub-projects',
 'Submit': 'Invia',
 'submit': 'Inviai',
 'Success!': 'Success!',

@@ -99,3 +99,15 @@ def ICON(icon):
         _class = "glyphicon glyphicon-" + icon,
         **{"_aria-hidden": "true"}
     )
+
+def _A(target, *components, **attributes):
+    if request.extension == 'load':
+        attrs = {
+            '_data-w2p_disable_with': 'default',
+            '_data-w2p_method': 'GET',
+            '_data-w2p_target': target
+        }
+    else:
+        attrs = {}
+    return A(*components, **dict(attributes, **attrs))
+        

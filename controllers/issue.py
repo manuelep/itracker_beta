@@ -35,10 +35,12 @@ def index():
     db.project.title.label = T("Project")
     db.project.title.represent = lambda v,r: v or ''
     
+    # PRIORITY
     db.issue.priority.readable = False
     db.issue_priority.sort_order.label = db.issue.priority.label
     db.issue_priority.sort_order.represent = lambda v,r: db.issue_priority._format(db.issue_priority[r.issue.priority])
     
+    # SEVERITY
     db.issue.severity.readable = False
     db.issue_severity.sort_order.label = db.issue.severity.label
     db.issue_severity.sort_order.represent = lambda v,r: db.issue_severity._format(db.issue_severity[r.issue.severity])
@@ -78,7 +80,8 @@ def index():
 def onclick_hideModal(e):
     """ data-dismiss="modal"
     WARNING: problema noto: questo chiude il form aperto in modal prima della validazione
-    se qualcosa non passa la validazione si viene avvertiti via flash ma oramai il form è chiuso
+    se qualcosa non passa la validazione si viene avvertiti via flash ma oramai il form è chiuso.
+    Per ora ho limitato via js la digitazione di più di 255 caratteri mediante widget dedicato.
     """
     e.attributes['_onclick'] = "$('.modal').modal('hide');"
     return e
