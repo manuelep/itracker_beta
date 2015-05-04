@@ -35,7 +35,8 @@ def index():
     grid = SQLFORM.grid(query,
         field_id = db.issue.id,
         fields = fields,
-        orderby = db.issue.weigth,
+        orderby = db.issue.weigth|db.issue.modified_on,
+        args = request.args,
         links = [
             dict(header='Projects', body=IssueGrid.prj_link),
             dict(header='Tasks', body=IssueGrid.tsk_link),
@@ -51,10 +52,14 @@ def index():
 
 @auth.requires_login()
 def new():
+    """ DEPRECATED """
     return new_record('issue')
 
 def foo(e):
-    """ data-dismiss="modal" """
+    """ data-dismiss="modal"
+    WARNING: problema noto: questo chiude il form aperto in modal prima della validazione
+    se qualcosa non passa la validazione si viene avvertiti via flash ma oramai il form è chiuso
+    """
     e.attributes['_onclick'] = "$('.modal').modal('hide');"
     return e
 

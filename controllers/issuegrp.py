@@ -17,6 +17,7 @@ def index():
             dict(header='Projects', body=IssuegrpGrid.prj_link),
             dict(header='Wikis', body=IssuegrpGrid.doc_link),
         ],
+        args = request.args,
         links_in_grid = False,
         oncreate = IssuegrpGrid.oncreate,
         csv = False,
@@ -26,7 +27,7 @@ def index():
         ],
         formname = 'issuegrp'
     )
-    return locals()
+    return dict(grid=grid)
 
 @auth.requires_login()
 def new():

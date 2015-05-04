@@ -30,7 +30,8 @@ response.menu = [
 
 response.menu += [
     (SPAN(ICON('cog'), " ", T("Access")), False, '#', [
-        (DIV(ICON('user'), " ", T('Users')), False, URL('default', 'users'),),
+        (DIV(ICON('user'), " ", T('Users')), False, URL('default', 'access', args=('user',)),),
+        (DIV(ICON('asterisk'), " ", T('Teams')), False, URL('default', 'access', args=('group',)),),
     ]),
     (SPAN(ICON('dashboard'), " ", STRONG(TAG.u("iTracker"))), False, '#', [
         [DIV(ICON('tree-deciduous'), ' ', T('Projects')), False, URL('project', 'index')],

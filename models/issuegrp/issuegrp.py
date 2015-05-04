@@ -88,3 +88,7 @@ class IssuegrpGrid(object):
     def oncreate(form):
         if request.vars.project_id:
             db.link_issuegrp_project[0] = dict(issuegrp_id=form.vars.id, project_id=request.vars.project_id)
+        elif request.vars.project_ids:
+            db.link_issuegrp_project.bulk_insert([
+                dict(issuegrp_id=form.vars.id, project_id=i) \
+            for i in request.vars.project_ids])

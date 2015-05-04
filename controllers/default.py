@@ -38,15 +38,25 @@ def user():
     return dict(form=auth())
 
 @auth.requires_login()
-def users():
+def access():
+
+    db.auth_membership.user_id.represent = lambda v,_: "%(first_name)s %(last_name)s" % db.auth_user[v]
+    db.auth_membership.group_id.represent = lambda v,_: db.auth_group[v].role
 
     db.auth_user.registration_key.writable = True
-    grid = SQLFORM.smartgrid(db.auth_user,
+    db.auth_user.registration_key.requires = IS_IN_SET([
+        ("pending", "Pending",),
+        ("blocked", "Blocked",),
+        ("", "Accepted",)
+    ])
+    db.auth_user.registration_key.default = "pending"
+    grid = SQLFORM.smartgrid(db['auth_'+request.args(0)],
+        args = request.args[:1],
         linked_tables = [db.auth_membership],
         csv = False,
     )
-
     return locals()
+
 @cache.action()
 def download():
     """

@@ -187,16 +187,6 @@ class IssueGrid(object):
         """
         """
 
-#         def _btn(c):
-#             return A(
-#                 T("Replay"),
-#                 _href = URL('issue', 'new_comment',
-#                     args=(issue_id, c.id,),
-#                     vars=dict(redirect_url=URL())
-#                 ),
-#                 _class = "btn btn-default btn-xs"
-#             )
-
         all_comments = db(db.thread.issue_id==issue_id).select(orderby=db.thread.reply_to|~db.thread.created_on)
         def _walker(comment_id):
             for comment in all_comments.find(lambda row: row.reply_to==comment_id):
@@ -239,5 +229,13 @@ class IssueGrid(object):
     def oncreate(form):
         if request.vars.issuegrp_id:
             db.link_issue_issuegrp[0] = dict(issue_id=form.vars.id, issuegrp_id=request.vars.issuegrp_id)
+        elif request.vars.issuegrp_ids:
+            db.link_issue_issuegrp.bulk_insert([
+                dict(issue_id=form.vars.id, issuegrp_id=i) \
+            for i in request.vars.issuegrp_ids])
         elif request.vars.project_id:
             db.link_issue_project[0] = dict(issue_id=form.vars.id, project_id=request.vars.project_id)
+        elif request.vars.project_ids:
+            db.link_issue_project.bulk_insert([
+                dict(issue_id=form.vars.id, project_id=i) \
+            for i in request.vars.project_ids])

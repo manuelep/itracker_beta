@@ -4,12 +4,30 @@
 def index():
     grid = SQLFORM.smartgrid(db.project,
         linked_tables = ['project'],
-        csv = False,
         selectable = [
-            ('New task/milestone', lambda ids : redirect(URL('issuegrp', 'new', vars=dict(project_id=ids)))),
-            ('New issue', lambda ids : redirect(URL('issue', 'new', vars=dict(project_id=ids)))),
+            ('New task/milestone',
+                lambda ids : redirect(
+                    URL(
+                        'issuegrp', 'index.html',
+                        args = ('new', 'issuegrp',),
+                        vars = dict(project_ids=ids),
+                        user_signature = True
+                    )
+                )
+            ),
+            ('New issue',
+                lambda ids : redirect(
+                    URL(
+                        'issue', 'index.html',
+                        args = ('new', 'issue',),
+                        vars = dict(project_ids=ids),
+                        user_signature = True
+                    )
+                )
+            ),
             #('button label2',lambda ...)
         ],
+        csv = False,
         formname = 'project'
     )
     return locals()
