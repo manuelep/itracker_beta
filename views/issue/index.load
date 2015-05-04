@@ -9,8 +9,8 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
           	{{=ICON("filter")}} Common filters {{if request.extension=='load':}}<span class="caret"></span>{{pass}}</a>
           <ul class="dropdown-menu" role="menu">
-            <li>{{=_A('prj_issues_component', T("My active issues"), _href=URL(args=('assignet_to_user', 'active_only',), vars=request.vars))}}</li>
-            <li>{{=_A('prj_issues_component', T("My issues"), _href=URL(args=('assignet_to_user',), vars=request.vars))}}</li>
+            <li>{{=_A('prj_issues_component', T("My active issues"), _href=URL(args=('assigned_to_user', 'active_only',), vars=request.vars))}}</li>
+            <li>{{=_A('prj_issues_component', T("My issues"), _href=URL(args=('assigned_to_user',), vars=request.vars))}}</li>
             <li>{{=_A('prj_issues_component', T("Hide closed issues"), _href=URL(args=('active_only',), vars=request.vars))}}</li>
             <li>{{=_A('prj_issues_component', T("All issues"), _href=URL(vars=request.vars))}}</li>
           </ul>
