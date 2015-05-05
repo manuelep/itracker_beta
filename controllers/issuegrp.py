@@ -12,6 +12,9 @@ def index():
     else:
         query = db.issuegrp.id>0
 
+    if not any([i in request.args for i in ('view', 'edit', 'new',)]):
+        db.issuegrp.description.represent = lambda v,r: SPAN(MARKMIN('\n'.join(v.split('\n')[:5])+'...'))
+
     grid = SQLFORM.grid(query,
         links = [
             dict(header='Projects', body=IssuegrpGrid.prj_link),
