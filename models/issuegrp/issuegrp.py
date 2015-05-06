@@ -50,7 +50,7 @@ class IssuegrpGrid(object):
         def _get_lis(row):
 
             def _get_li(id, slug):
-                url = URL('wiki', 'index', extension='html', args=('issue_%s' % id +'_'+slug,))
+                url = URL('wiki', 'index', extension='html', args=('issue-%s' % id +'-'+slug,))
                 return LI(A(slug, _href=url))
             
             for slug in row.slugs:
