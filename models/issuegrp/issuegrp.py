@@ -8,7 +8,7 @@ class IssuegrpGrid(object):
             (db.project.id==db.link_issuegrp_project.project_id) & \
             (db.link_issuegrp_project.issuegrp_id==r.id)
         ).select(db.project.ALL, distinct=True)
-        url = lambda rid: URL('project', 'index', extension="",
+        url = lambda rid: URL('project', 'index', extension="html",
             args = ('project', 'view', 'project', rid,),
             user_signature=True
         )
@@ -50,7 +50,7 @@ class IssuegrpGrid(object):
         def _get_lis(row):
 
             def _get_li(id, slug):
-                url = URL('wiki', 'index', extension='', args=('issue_%s' % id +'_'+slug,))
+                url = URL('wiki', 'index', extension='html', args=('issue_%s' % id +'_'+slug,))
                 return LI(A(slug, _href=url))
             
             for slug in row.slugs:

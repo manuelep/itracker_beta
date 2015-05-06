@@ -94,13 +94,18 @@ auth.settings.reset_password_requires_verification = True
 left_sidebar_enabled = False
 
 def ICON(icon):
-    """ <span class="glyphicon glyphicon-search" aria-hidden="true"></span> """
+    """ Just an helper for bootstrap (v. 3.*) glyphicon.
+    Running ICON('search') you'll get a SPAN object like this:
+    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+    doc: http://getbootstrap.com/components/#glyphicons-how-to-use
+    """
     return SPAN(
         _class = "glyphicon glyphicon-" + icon,
         **{"_aria-hidden": "true"}
     )
 
 def _A(target, *components, **attributes):
+    """ This link can be used inside web2py components! """
     if request.extension == 'load':
         attrs = {
             '_data-w2p_disable_with': 'default',
@@ -110,4 +115,4 @@ def _A(target, *components, **attributes):
     else:
         attrs = {}
     return A(*components, **dict(attributes, **attrs))
-        
+    
