@@ -173,6 +173,7 @@
 'Is Active': "E' attivo",
 'Is Default': 'Is Default',
 'Issue': 'Issue',
+'Issue id': 'Issue id',
 'Issue Id': 'Issue Id',
 'issue_priority': 'issue_priority',
 'issue_severity': 'issue_severity',

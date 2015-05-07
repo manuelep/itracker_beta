@@ -3,6 +3,71 @@
 class IssueGrid(object):
 
     @staticmethod
+    def render(v, r):
+        """ To be used as id represent function """
+
+        def _rf(name):
+            """ Render field value accordingly to their represent function """
+            return db.issue[name].represent(r.issue[name], r)
+
+        def _closed():
+            if r.issue.closed:
+                return SPAN(ICON('ban-circle'), _class="text-danger")
+            else:
+                return SPAN(ICON('ok-circle'), _class="text-success")
+
+        return DIV(
+            DIV(
+                DIV(_closed(), " ", _rf('status'), _class="col-md-2"), # status
+                DIV(_rf('typology'), _class="col-md-2"), # priority
+                DIV(_rf('priority'), _class="col-md-2"), # priority
+                DIV(_rf('severity'), _class="col-md-2"), # severity
+                DIV(_rf('dead_line'), _class="col-md-4"), # deadline
+                _class = "row"
+            ), # header row with meta data
+            DIV(" ", _class="col-md-12"), DIV(" ", _class="col-md-12"),
+            DIV(
+                DIV(
+                    DIV(
+                        DIV(
+                            DIV(
+                                H4(
+                                    A(
+                                        "issue #", r.issue.id,
+                                        _class="collapsed", _href="#collapse%s" % r.issue.id,
+                                        **{
+                                            '_data-toggle': "collapse",
+                                            '_data-parent': "#accordion",
+                                            '_aria-expanded': "true",
+                                            '_aria-controls': "collapse%s" % r.issue.id
+                                        } 
+                                    ),
+                                    ": ", r.issue.title,
+                                    _class="panel-title"
+                                ),
+                                DIV(
+                                    DIV(
+                                        r.issue.description,
+                                        _class="panel-body"
+                                    ),
+                                    _id="collapse%s" % r.issue.id, _class="panel-collapse collapse", _role="tabpanel",
+                                    **{'_aria-labelledby': "heading%s" % r.issue.id}
+                                ),
+                                _class="panel-heading", _role="tab", _id="headingOne"
+                            ),
+                            _class="panel panel-default"
+                        ),
+                        _class="panel-group", _id="accordion%s" % r.issue.id, _role="tablist",
+                        **{'aria-multiselectable': "true"}
+                    ),
+                    _class = "col-md-12"
+                ),
+                _class = "row"
+            ), # body row with title and description
+            _class = "container-fluid"
+        )
+
+    @staticmethod
     def prj_link(r):
         if not hasattr(r, 'title'): return ''
         res_s = db(

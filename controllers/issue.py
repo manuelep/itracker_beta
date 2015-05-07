@@ -38,14 +38,27 @@ def index():
     # PRIORITY
     db.issue.priority.readable = False
     db.issue_priority.sort_order.label = db.issue.priority.label
-    db.issue_priority.sort_order.represent = lambda v,r: db.issue_priority._format(db.issue_priority[r.issue.priority])
+    db.issue_priority.sort_order.readable = False
+#     db.issue_priority.sort_order.represent = lambda v,r: db.issue_priority._format(db.issue_priority[r.issue.priority])
     
     # SEVERITY
     db.issue.severity.readable = False
     db.issue_severity.sort_order.label = db.issue.severity.label
-    db.issue_severity.sort_order.represent = lambda v,r: db.issue_severity._format(db.issue_severity[r.issue.severity])
-    
-    fields = [db.issue.id, db.issue.title, db.issue.typology,
+    db.issue_severity.sort_order.readable = False
+#     db.issue_severity.sort_order.represent = lambda v,r: db.issue_severity._format(db.issue_severity[r.issue.severity])
+
+    db.issue.id.label = T("Issue id")
+    db.issue.id.represent = IssueGrid.render
+    if not any([i in request.args for i in ('view', 'edit',)]):
+        db.issue.title.readable = False
+        db.issue.typology.readable = False
+        db.issue.weigth.readable = False
+        db.issue.closed.readable = False
+        db.issue.dead_line.readable = False
+        db.issue.status.readable = False
+        db.issue.description.readable = False
+
+    fields = [db.issue.id, db.issue.title, db.issue.description, db.issue.typology,
         db.issue.priority, db.issue_priority.sort_order,
         db.issue.severity, db.issue_severity.sort_order,
         db.issue.weigth, db.issue.status,
