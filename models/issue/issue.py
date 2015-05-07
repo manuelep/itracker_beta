@@ -47,7 +47,7 @@ class IssueGrid(object):
                                 ),
                                 DIV(
                                     DIV(
-                                        r.issue.description,
+                                        MARKMIN(r.issue.description),
                                         _class="panel-body"
                                     ),
                                     _id="collapse%s" % r.issue.id, _class="panel-collapse collapse", _role="tabpanel",
