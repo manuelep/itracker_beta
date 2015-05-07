@@ -6,7 +6,7 @@ if not 'plugin_shared_tools' in globals():
     import plugin_shared_tools
 Populator, IssueReferences, UniqueDefault = plugin_shared_tools.Populator, plugin_shared_tools.IssueReferences, plugin_shared_tools.UniqueDefault
 
-from datetime import datetime
+from datetime import datetime, date
 from gluon.tools import prettydate
 
 ####################

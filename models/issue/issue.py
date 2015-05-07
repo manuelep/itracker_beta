@@ -16,16 +16,28 @@ class IssueGrid(object):
             else:
                 return SPAN(ICON('ok-circle'), _class="text-success")
 
+        def _dl():
+            if r.issue.dead_line is None:
+                return SPAN(ICON('sunglasses'), _class="text-info")
+            today = date.today()
+            if r.issue.dead_line > today:
+                return SPAN(ICON('flag'), _class="text-success")
+            elif r.issue.dead_line < today:
+                return SPAN(ICON('fire'), _class="text-danger")
+            else:
+                return SPAN(ICON('flag'), _class="text-warning")
+
         return DIV(
             DIV(
                 DIV(_closed(), " ", _rf('status'), _class="col-md-2"), # status
                 DIV(_rf('typology'), _class="col-md-2"), # priority
-                DIV(_rf('priority'), _class="col-md-2"), # priority
-                DIV(_rf('severity'), _class="col-md-2"), # severity
-                DIV(_rf('dead_line'), _class="col-md-4"), # deadline
+                DIV(TAG.abbr("P", _title=T("Priority")), ": ", _rf('priority'), _class="col-md-2"), # priority
+                DIV(TAG.abbr("S", _title=T("Severity")), ": ", _rf('severity'), _class="col-md-2"), # severity
+                DIV(_dl(), " ", _rf('dead_line'), _class="col-md-4"), # deadline
                 _class = "row"
             ), # header row with meta data
-            DIV(" ", _class="col-md-12"), DIV(" ", _class="col-md-12"),
+            # TODO: USE CSS!!!
+            DIV(" ", _class="col-md-12"), DIV(" ", _class="col-md-12"), # BRUTTURA per distanziare meta info da titolo
             DIV(
                 DIV(
                     DIV(
