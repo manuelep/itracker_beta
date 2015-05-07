@@ -159,5 +159,5 @@ if "auth" in locals(): auth.wikimenu()
 
 response.menu += [(SPAN(ICON("wrench"), " ", T('Customize issue'), _class="text-warning"), False, None, [
     (T(tn), False, URL('plugin_issue', 'customize', args=(tn,)), []) \
-        for tn in db.tables if tn.startswith('issue_')
+        for tn in ('issue_type', 'issue_priority', 'issue_severity', 'issue_state', )
 ])]
