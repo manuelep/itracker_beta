@@ -60,7 +60,7 @@ class UniqueDefault(object):
         # TODO: dicide what to do if the passed set referes to more than one record and
         # is_default is set to True
         if f['is_default']==True:
-            db(self.tab.is_default==True).update_naive(is_default=False)
+            s._db(self.tab.is_default==True).update_naive(is_default=False)
 
 
 class CheckTextLength(TextWidget):

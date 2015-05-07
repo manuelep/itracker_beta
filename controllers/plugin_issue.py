@@ -11,5 +11,5 @@ def index():
     return locals()
 
 @auth.requires_login()
-def _customize():
-    return customize()
+def customize():
+    return _customize()
