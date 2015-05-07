@@ -19,13 +19,14 @@ class IssueGrid(object):
         def _dl():
             if r.issue.dead_line is None:
                 return SPAN(ICON('sunglasses'), _class="text-info")
-            today = date.today()
-            if r.issue.dead_line > today:
+            elif r.issue.closed:
                 return SPAN(ICON('flag'), _class="text-success")
+            
+            today = date.today()
+            if r.issue.dead_line >= today:
+                return SPAN(ICON('flag'), _class="text-warning")
             elif r.issue.dead_line < today:
                 return SPAN(ICON('fire'), _class="text-danger")
-            else:
-                return SPAN(ICON('flag'), _class="text-warning")
 
         return DIV(
             DIV(
