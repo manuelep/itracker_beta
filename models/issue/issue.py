@@ -17,6 +17,7 @@ class IssueGrid(object):
                 return SPAN(ICON('ok-circle'), _class="text-success")
 
         def _dl():
+            """ Dead line """
             if r.issue.dead_line is None:
                 return SPAN(ICON('sunglasses'), _class="text-primary")
             elif r.issue.closed:
@@ -28,13 +29,19 @@ class IssueGrid(object):
             elif r.issue.dead_line < today:
                 return SPAN(ICON('fire'), _class="text-danger")
 
+        def _cc():
+            """ Comments """
+            c = db(db.thread.issue_id==v).count()
+            return SPAN(ICON("comment"), " ", c, _class="label label-default")
+
         return DIV(
             DIV(
                 DIV(_closed(), " ", _rf('status'), _class="col-md-2"), # status
-                DIV(_rf('typology'), _class="col-md-2"), # priority
+                DIV(_rf('typology'), _class="col-md-1"), # priority
                 DIV(TAG.abbr("P", _title=T("Priority")), ": ", _rf('priority'), _class="col-md-2"), # priority
                 DIV(TAG.abbr("S", _title=T("Severity")), ": ", _rf('severity'), _class="col-md-2"), # severity
                 DIV(_dl(), " ", _rf('dead_line'), _class="col-md-4"), # deadline
+                DIV(_cc(), _class="col-md-1"), # comments
                 _class = "row"
             ), # header row with meta data
             # TODO: USE CSS!!!
@@ -260,12 +267,20 @@ class IssueGrid(object):
         )
         return SPAN(button, div)
 
+    @staticmethod
+    def _colors(c):
+        n = len(c) or 1
+        white = int("FF7171", 16)
+        first = white/n
+        return dict([(i.id, '#{0:06X}'.format(first*(n+1))) for n,i in enumerate(c)])
+
     @classmethod
     def threads(cls, issue_id):
         """
         """
 
         all_comments = db(db.thread.issue_id==issue_id).select(orderby=db.thread.reply_to|~db.thread.created_on)
+        cols = cls._colors(all_comments)
         def _walker(comment_id):
             for comment in all_comments.find(lambda row: row.reply_to==comment_id):
                 yield comment
@@ -275,33 +290,45 @@ class IssueGrid(object):
         rows = []
         
         for comment in all_comments.find(lambda row: row.reply_to==None):
-            main = DIV(
-                DIV(
-                    T("Comment id: "), comment.id,
-                    _class="col-md-1"
+            main = TR(
+                TD(
+                    SPAN("#", comment.id, _class="label", _style="background-color: %s" % cols[comment.id]),
+                    _class="info"
+#                     _class="col-md-1"
                 ),
-                DIV(MARKMIN(comment.reply), _class="col-md-9 alert alert-info"),
-                DIV(cls.add_new_comment(issue_id, comment.id), _class="col-md-2"),
-                _class="row"
+                TD(ICON("user"), BR(), db.auth_user[comment.created_by].username),
+                TD(MARKMIN(comment.reply), _style="width: 80%"),
+                TD(
+                    cls.add_new_comment(issue_id, comment.id),
+#                     _class="col-md-2"
+                ),
+#                 _class="row"
             )
-            subs = [DIV(
-                DIV(
-                    T("Comment id: "), reply.id,
-                    _class="col-md-1"
+            subs = [TR(
+                TD(
+                    SPAN("#", reply.reply_to, _class="label", _style="background-color: %s" % cols[reply.reply_to]),
+                    " ", ICON("chevron-right"), " ",
+                    SPAN("#", reply.id, _class="label", _style="background-color: %s" % cols[reply.id]),
+#                     _class="col-md-2"
                 ),
+                TD(ICON("user"), BR(), db.auth_user[reply.created_by].username),
+                TD(MARKMIN(reply.reply), _style="width: 80%"),
+#                 DIV(
+#                     T("In reply to: "),
+#                     reply.reply_to,
+#                     _class="col-md-1"
+#                 ),
+#                 DIV(, _class="col-md-8 alert alert-warning"),
                 DIV(
-                    T("In reply to: "),
-                    reply.reply_to,
-                    _class="col-md-1"
+                    cls.add_new_comment(issue_id, reply.id),
+#                     _class="col-md-2"
                 ),
-                DIV(MARKMIN(reply.reply), _class="col-md-8 alert alert-warning"),
-                DIV(cls.add_new_comment(issue_id, reply.id), _class="col-md-2"),
-                _class = "row"
+#                 _class = "row"
             ) for reply in _walker(comment.id)]
             rows += [main]
             rows += subs
 
-        return DIV(DIV(*rows, _class="container-fluid"))
+        return TABLE(TBODY(*rows), _class="table table-striped")
 
     @staticmethod
     def oncreate(form):
