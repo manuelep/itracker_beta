@@ -18,7 +18,7 @@ class IssueGrid(object):
 
         def _dl():
             if r.issue.dead_line is None:
-                return SPAN(ICON('sunglasses'), _class="text-info")
+                return SPAN(ICON('sunglasses'), _class="text-primary")
             elif r.issue.closed:
                 return SPAN(ICON('flag'), _class="text-success")
             
