@@ -12,9 +12,9 @@ class IssueGrid(object):
 
         def _closed():
             if r.issue.closed:
-                return SPAN(ICON('ban-circle'), _class="text-danger")
+                return SPAN(ICON('exclamation-sign'), _class="text-success")
             else:
-                return SPAN(ICON('ok-circle'), _class="text-success")
+                return SPAN(ICON('paperclip'), _class="text-warning")
 
         def _dl():
             """ Dead line """
