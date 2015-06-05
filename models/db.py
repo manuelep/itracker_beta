@@ -93,15 +93,16 @@ auth.settings.reset_password_requires_verification = True
 
 left_sidebar_enabled = False
 
-def ICON(icon):
+def ICON(icon, **kw):
     """ Just an helper for bootstrap (v. 3.*) glyphicon.
     Running ICON('search') you'll get a SPAN object like this:
     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
     doc: http://getbootstrap.com/components/#glyphicons-how-to-use
     """
+    kw["_aria-hidden"] = "true"
     return SPAN(
         _class = "glyphicon glyphicon-" + icon,
-        **{"_aria-hidden": "true"}
+        **kw
     )
 
 def _A(target, *components, **attributes):

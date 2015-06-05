@@ -12,14 +12,14 @@ class IssueGrid(object):
 
         def _closed():
             if r.issue.closed:
-                return SPAN(ICON('exclamation-sign'), _class="text-success")
+                return SPAN(ICON('exclamation-sign', _title=T("Closed"), **{"_data-toggle": "tooltip", "_data-placement": "top"}), _class="text-success")
             else:
-                return SPAN(ICON('paperclip'), _class="text-warning")
+                return SPAN(ICON('paperclip', _title=T("Open"), **{"_data-toggle": "tooltip", "_data-placement": "top"}), _class="text-warning")
 
         def _dl():
             """ Dead line """
             if r.issue.dead_line is None:
-                return SPAN(ICON('sunglasses'), _class="text-primary")
+                return SPAN(ICON('sunglasses', _title=T("Relax! No deadline fixed."), **{"_data-toggle": "tooltip", "_data-placement": "top"}), _class="text-primary")
             elif r.issue.closed:
                 return SPAN(ICON('flag'), _class="text-success")
             
@@ -27,7 +27,7 @@ class IssueGrid(object):
             if r.issue.dead_line >= today:
                 return SPAN(ICON('flag'), _class="text-warning")
             elif r.issue.dead_line < today:
-                return SPAN(ICON('fire'), _class="text-danger")
+                return SPAN(ICON('fire', _title=T("Fired! Deadline passed and issue still open!"), **{"_data-toggle": "tooltip", "_data-placement": "top"}), _class="text-danger")
 
         def _cc():
             """ Comments """

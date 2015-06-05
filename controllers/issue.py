@@ -83,6 +83,7 @@ def index():
         csv = False,
         formname = 'issue'
     )
+
     return locals()
 
 # @auth.requires_login()
