@@ -73,9 +73,12 @@ db.define_table('issue',
     Field('weigth', 'integer', compute=IssueWeight.run),
     Field('status', 'reference issue_state', label=T('State')),
     Field('tags', 'list:string'),
-    Field('assigned_to', 'list:reference auth_group', comment="DEPRECATED"), # DEPRECATED
-    Field('assignedto', 'reference auth_group', label=T("Assigned to")),
+#     Field('assigned_to', 'list:reference auth_group', comment="DEPRECATED"), # DEPRECATED
+    Field('assignedto', 'reference auth_group', label=T("Assigned to"),
+        default = auth.user_id
+    ),
     Field('dead_line', 'date', represent=lambda v,r: prettydate(v)),
+    Field('time_spent', 'integer', label=T("Time spent"), comment=T("in hours")),
     Field('closed', 'boolean', default=False),
     Field('closed_on', 'datetime', writable=False),
     Field('slugs', 'list:string', label=T("Wiki pages"),
@@ -132,16 +135,16 @@ class AuthGroupSet(object):
         return cls._get_label(value)
 
 
-db.issue.assigned_to.requires = IS_IN_SET(
-    theset = AuthGroupSet.get(),
-    multiple = True
-)
+# db.issue.assigned_to.requires = IS_IN_SET(
+#     theset = AuthGroupSet.get(),
+#     multiple = True
+# )
 db.issue.assignedto.requires = IS_IN_SET(
     theset = AuthGroupSet.get(),
     multiple = False
 )
 
-db.issue.assigned_to.represent = AuthGroupSet.represent
+# db.issue.assigned_to.represent = AuthGroupSet.represent
 db.issue.assignedto.represent = AuthGroupSet.represent1
 
 # Thread
